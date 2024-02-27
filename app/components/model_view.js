@@ -1,22 +1,27 @@
 'use client';
 
-import { Canvas, useLoader } from '@react-three/fiber';
-import { useEffect } from 'react';
+import { Canvas, useLoader, useFrame  } from '@react-three/fiber';
 import { GLTFLoader, useGLTF, useAnimations } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 export const ModelViewer = () => {
-    const myModel = useLoader(GLTFLoader, '/boar_scene.gltf');
-    const { nodes, animations } = useGLTF('/boar_scene.gltf')
-    const { ref, actions, names } = useAnimations(animations)
+    const model = useLoader(GLTFLoader, '/boar_scene.gltf');
 
-    useEffect(() => {
-        // Reset and fade in animation after an index has been changed
-        actions[names[0]].reset().fadeIn(0.5).play()
-      }, [])
+    let mixer
+    if (model.animations.length) {
+        mixer = new THREE.AnimationMixer(model.scene);
+        model.animations.forEach(clip => {
+            const action = mixer.clipAction(clip)
+            action.play();
+        });
+    }
+
+    useFrame((state, delta) => {
+        mixer?.update(delta)
+    })
 
     return (
         <Canvas style={{ height: '500px', width: '100%' }}>
-            <primitive object={myModel.scene} />
+            <primitive object={model.scene} />
             <ambientLight intensity={2} />
         </Canvas>
     );

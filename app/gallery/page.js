@@ -1,9 +1,12 @@
-'use client';
 import { Person, ShoppingCart, ViewInAr } from "@mui/icons-material";
-import styles from "./modulestyle/home.module.css";
+import styles from "./modulestyle/gallery.module.css";
 import { ModelViewer } from "./components/model_view";
 
-export default function Home() {
+export default function Gallery() {
+
+    
+
+
   return (<>
     <div className={styles.navbar}>
         <ViewInAr sx={{marginRight:"auto"}}></ViewInAr>
